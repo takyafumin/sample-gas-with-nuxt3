@@ -19,6 +19,7 @@ limitations under the License.
   import { VCard, VCardTitle, VCardText, VContainer, VRow, VCol } from 'vuetify/components'
 
   const items = ref<any[]>([])
+  const headers = ref<string[]>([])
   const runtimeConfig = useRuntimeConfig()
   const deployId = runtimeConfig.public.gasDeployId
 
@@ -26,6 +27,9 @@ limitations under the License.
     const response = await fetch(`https://script.google.com/macros/s/${deployId}/exec`)
     const result = await response.json()
     items.value = result.data
+    if (items.value.length > 0) {
+      headers.value = items.value[0]
+    }
   }
 
   onMounted(fetchData)
@@ -35,10 +39,14 @@ limitations under the License.
   <v-container>
     <h1>データ一覧</h1>
     <v-row>
-      <v-col v-for="item in items" :key="item[0]" cols="12" md="12">
+      <v-col v-for="item in items.slice(1)" :key="item[0]" cols="12" md="12">
         <v-card>
-          <v-card-title>{{ item[0] }}</v-card-title>
-          <v-card-text>{{ item }}</v-card-text>
+          <v-card-title>{{ item[0] }} - {{ item[1] }}</v-card-title>
+          <v-card-text>
+            <div v-for="(value, index) in item.slice(2)" :key="index">
+              <strong>{{ headers[index + 2] }}:</strong> {{ value }}
+            </div>
+          </v-card-text>
         </v-card>
       </v-col>
     </v-row>
