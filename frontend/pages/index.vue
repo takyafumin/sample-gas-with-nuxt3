@@ -13,35 +13,34 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-<script lang="ts">
+<script setup lang="ts">
   import { ref, onMounted } from 'vue'
+  import { useRuntimeConfig } from '#app'
+  import { VCard, VCardTitle, VCardText, VContainer, VRow, VCol } from 'vuetify/components'
 
-  export default {
-    setup() {
-      const items = ref<any[]>([])
-      const runtimeConfig = useRuntimeConfig()
-      const deployId = runtimeConfig.public.gasDeployId
+  const items = ref<any[]>([])
+  const runtimeConfig = useRuntimeConfig()
+  const deployId = runtimeConfig.public.gasDeployId
 
-      const fetchData = async () => {
-        const response = await fetch(`https://script.google.com/macros/s/${deployId}/exec`)
-        const result = await response.json()
-        items.value = result.data
-      }
-
-      onMounted(fetchData)
-
-      return {
-        items
-      }
-    }
+  const fetchData = async () => {
+    const response = await fetch(`https://script.google.com/macros/s/${deployId}/exec`)
+    const result = await response.json()
+    items.value = result.data
   }
+
+  onMounted(fetchData)
 </script>
 
 <template>
-  <div>
+  <v-container>
     <h1>データ一覧</h1>
-    <ul>
-      <li v-for="item in items" :key="item[0]">{{ item }}</li>
-    </ul>
-  </div>
+    <v-row>
+      <v-col v-for="item in items" :key="item[0]" cols="12" md="12">
+        <v-card>
+          <v-card-title>{{ item[0] }}</v-card-title>
+          <v-card-text>{{ item }}</v-card-text>
+        </v-card>
+      </v-col>
+    </v-row>
+  </v-container>
 </template>
