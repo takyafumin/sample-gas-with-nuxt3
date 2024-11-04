@@ -13,8 +13,5 @@
     "nuxt": "^3.13.2",
     "vue": "latest",
     "vue-router": "latest"
-  },
-  "devDependencies": {
-    "@nuxt/typescript-build": "^3.0.2"
   }
 }
