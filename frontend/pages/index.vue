@@ -15,36 +15,33 @@ limitations under the License.
 */
 <script setup lang="ts">
   import { ref, onMounted } from 'vue'
-  import { useRuntimeConfig } from '#app'
   import { VCard, VCardTitle, VCardText, VContainer, VRow, VCol } from 'vuetify/components'
+  import { fetchData, type Item } from '~/composables/useFetchData'
 
-  const items = ref<any[]>([])
-  const headers = ref<string[]>([])
-  const runtimeConfig = useRuntimeConfig()
-  const deployId = runtimeConfig.public.gasDeployId
+  const items = ref<Item[]>([])
 
-  const fetchData = async () => {
-    const response = await fetch(`https://script.google.com/macros/s/${deployId}/exec`)
-    const result = await response.json()
-    items.value = result.data
-    if (items.value.length > 0) {
-      headers.value = items.value[0]
-    }
-  }
-
-  onMounted(fetchData)
+  onMounted(async () => {
+    const result = await fetchData()
+    items.value = result.items
+  })
 </script>
 
 <template>
   <v-container>
     <h1>データ一覧</h1>
     <v-row>
-      <v-col v-for="item in items.slice(1)" :key="item[0]" cols="12" md="12">
+      <v-col v-for="item in items" :key="item.id" cols="12" md="12">
         <v-card>
-          <v-card-title>{{ item[0] }} - {{ item[1] }}</v-card-title>
+          <v-card-title>{{ item.id }} - {{ item.companyName }}</v-card-title>
           <v-card-text>
-            <div v-for="(value, index) in item.slice(2)" :key="index">
-              <strong>{{ headers[index + 2] }}:</strong> {{ value }}
+            <div>
+              <strong>住所:</strong> {{ item.address }}
+            </div>
+            <div>
+              <strong>電話番号:</strong> {{ item.phone }}
+            </div>
+            <div>
+              <strong>メールアドレス:</strong> {{ item.email }}
             </div>
           </v-card-text>
         </v-card>
