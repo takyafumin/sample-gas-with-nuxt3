@@ -14,6 +14,20 @@
  * limitations under the License.
  */
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { hello } from './example-module';
 
-console.log(hello());
+// src/Code.gs
+function doGet(e: any) {
+  const params = e.parameter;
+
+  const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('会社');
+  if (!sheet) {
+    throw new Error('Sheet not found');
+  }
+  const sheetData = sheet.getDataRange().getValues();
+
+  const output = ContentService.createTextOutput();
+  output.setMimeType(ContentService.MimeType.JSON);
+  output.setContent(JSON.stringify({ data: sheetData }));
+
+  return output;
+}

@@ -13,12 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { hello } from '../src/example-module';
+import { defineNuxtConfig } from 'nuxt/config'
 
-describe('example-module', () => {
-  describe('hello', () => {
-    it('Returns a hello message', () => {
-      expect(hello()).toBe('Hello Apps Script!');
-    });
-  });
-});
+// https://nuxt.com/docs/api/configuration/nuxt-config
+export default defineNuxtConfig({
+  compatibilityDate: '2024-04-03',
+  devtools: { enabled: true },
+  runtimeConfig: {
+    public: {
+        gasDeployId: '',
+    },
+  },
+})
